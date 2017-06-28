@@ -47,16 +47,19 @@ gulp.task('clean:js', function (cb) {
 gulp.task('build:bower', ['clean:bower'], function(){
 	return gulp.src(plugins.mainBowerFiles())
 		.pipe(plugins.rename({suffix: '.min'}))
-		// .pipe(plugins.uglify())
+		.pipe(plugins.uglify())
 		.pipe(gulp.dest("dist/styleguide/bower_components"))
 		.pipe(copyPublic("styleguide/bower_components"));
 });
 
 /* core tasks */
 gulp.task('build:bower-copy-prism-languages', ['build:bower'], function(){
-	return gulp.src(['src/bower_components/prism/components/*.min.js'])
-		.pipe(gulp.dest("dist/styleguide/bower_components/prism/components"))
-		.pipe(copyPublic("styleguide/bower_components/prism/components"))
+	return gulp.src(['src/bower_components/prism/components/*.js'])
+        .pipe(plugins.concat('additional-languages.js'))
+        .pipe(plugins.rename({suffix: '.min'}))
+		.pipe(plugins.uglify())
+		.pipe(gulp.dest("dist/styleguide/bower_components"))
+		.pipe(copyPublic("styleguide/bower_components"))
 });
 
 gulp.task('build:css-general', ['clean:css-patternlab'], function() {
@@ -70,7 +73,8 @@ gulp.task('build:css-general', ['clean:css-patternlab'], function() {
 });
 
 gulp.task('build:css-patternlab', ['build:css-general'], function() {
-	return plugins.rubySass('src/sass/styleguide.scss', { style: 'expanded', "sourcemap=none": true })
+    return gulp.src('src/sass/styleguide.scss')
+	    .pipe(plugins.sass())
 		.pipe(plugins.autoprefixer({browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'android 4']}, {map: false }))
 		.pipe(gulp.dest('dist/styleguide/css'))
 		.pipe(plugins.rename({suffix: '.min'}))
