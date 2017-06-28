@@ -47,9 +47,16 @@ gulp.task('clean:js', function (cb) {
 gulp.task('build:bower', ['clean:bower'], function(){
 	return gulp.src(plugins.mainBowerFiles())
 		.pipe(plugins.rename({suffix: '.min'}))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest("dist/styleguide/bower_components"))
 		.pipe(copyPublic("styleguide/bower_components"));
+});
+
+/* core tasks */
+gulp.task('build:bower-copy-prism-languages', ['build:bower'], function(){
+	return gulp.src(['src/bower_components/prism/components/*.min.js'])
+		.pipe(gulp.dest("dist/styleguide/bower_components/prism/components"))
+		.pipe(copyPublic("styleguide/bower_components/prism/components"))
 });
 
 gulp.task('build:css-general', ['clean:css-patternlab'], function() {
@@ -125,9 +132,9 @@ gulp.task('build:js-pattern', ['build:js-viewer'], function() {
 		.pipe(copyPublic("styleguide/js"));
 });
 
-gulp.task('default', ['build:bower', 'build:css-patternlab', 'build:html', 'build:js-pattern'], function () {
+gulp.task('default', ['build:bower-copy-prism-languages', 'build:css-patternlab', 'build:html', 'build:js-pattern'], function () {
 	if (args.watch !== undefined) {
-		gulp.watch(['src/bower_components/**/*'], ['build:bower']);
+		gulp.watch(['src/bower_components/**/*'], ['build:bower-copy-prism-languages']);
 		gulp.watch(['src/css/prism-okaidia.css'],['build:css-general']);
 		gulp.watch(['src/sass/styleguide.scss'], ['build:css-patternlab']);
 		gulp.watch(['src/html/*'], ['build:html']);

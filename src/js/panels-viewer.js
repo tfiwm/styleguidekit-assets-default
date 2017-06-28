@@ -74,7 +74,7 @@ var panelsViewer = {
           var e        = new XMLHttpRequest();
           e.onload     = (function(i, panels, patternData, iframeRequest) {
             return function() {
-              prismedContent    = Prism.highlight(this.responseText, Prism.languages[panels[i].language] || 'HTML');
+              prismedContent    = Prism.highlight(this.responseText, Prism.languages[panels[i].language || 'markup']);
               template          = document.getElementById(panels[i].templateID);
               templateCompiled  = Hogan.compile(template.innerHTML);
               templateRendered  = templateCompiled.render({ 'language': 'html', 'code': prismedContent });
