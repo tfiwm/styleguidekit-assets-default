@@ -47,17 +47,20 @@ gulp.task('clean:js', function (cb) {
 gulp.task('build:bower', ['clean:bower'], function(){
 	return gulp.src(plugins.mainBowerFiles())
 		.pipe(plugins.rename({suffix: '.min'}))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest("dist/styleguide/bower_components"))
 		.pipe(copyPublic("styleguide/bower_components"));
 });
 
 /* core tasks */
 gulp.task('build:bower-copy-prism-languages', ['build:bower'], function(){
-	return gulp.src(['src/bower_components/prism/components/*.js'])
+	return gulp.src([
+        'src/bower_components/prism/components/prism-sass.js',
+        'src/bower_components/prism/components/prism-handlebars.js'
+        ])
         .pipe(plugins.concat('additional-languages.js'))
         .pipe(plugins.rename({suffix: '.min'}))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest("dist/styleguide/bower_components"))
 		.pipe(copyPublic("styleguide/bower_components"))
 });
@@ -116,7 +119,7 @@ gulp.task('build:js-viewer', ['clean:js'], function() {
 		.pipe(plugins.concat('patternlab-viewer.js'))
 		.pipe(gulp.dest('dist/styleguide/js'))
 		.pipe(plugins.rename({suffix: '.min'}))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest('dist/styleguide/js'))
 		.pipe(copyPublic("styleguide/js"));
 });
@@ -131,7 +134,7 @@ gulp.task('build:js-pattern', ['build:js-viewer'], function() {
 		.pipe(plugins.concat('patternlab-pattern.js'))
 		.pipe(gulp.dest('dist/styleguide/js'))
 		.pipe(plugins.rename({suffix: '.min'}))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest('dist/styleguide/js'))
 		.pipe(copyPublic("styleguide/js"));
 });
